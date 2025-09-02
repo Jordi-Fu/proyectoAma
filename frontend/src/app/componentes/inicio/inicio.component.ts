@@ -1,28 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { AuthService } from '../../servicios/auth.service';
+import { AuthService, User } from '../../servicios/auth.service';
 import { CommonModule } from '@angular/common';
+import { ListaDocumentosComponent } from '../lista-documentos/lista-documentos.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-inicio',
-  imports: [RouterLink, RouterLinkActive, CommonModule],
+  imports: [RouterLink, RouterLinkActive, CommonModule, ListaDocumentosComponent],
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.scss'
 })
 export class InicioComponent implements OnInit {
     isMenuOpen = false;
-    currentUser: any = null;
+    currentUser$: Observable<User | null>;
 
     constructor(
         private router: Router,
         private authService: AuthService
-    ) {}
+    ) {
+        this.currentUser$ = this.authService.currentUser$;
+    }
 
     ngOnInit() {
-        // Suscribirse al usuario actual
-        this.authService.currentUser$.subscribe(user => {
-            this.currentUser = user;
-        });
+        // No necesitamos suscribirnos manualmente, usaremos el pipe async en el template
     }
 
     toggleMenu() {

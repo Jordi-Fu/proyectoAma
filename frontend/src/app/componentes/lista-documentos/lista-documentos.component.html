@@ -1,0 +1,122 @@
+<div class="lista-documentos-container">
+  <div class="header">
+    <h2>Mis Documentos</h2>
+    <div class="search-container">
+      <input
+        type="text"
+        placeholder="Buscar por nombre..."
+        [(ngModel)]="busqueda"
+        (input)="onBusquedaChange($event.target.value || '')"
+        class="search-input"
+      />
+      <i class="search-icon">🔍</i>
+    </div>
+  </div>
+
+  <div class="content" [class.loading]="cargando">
+    <!-- Loading spinner -->
+    <div *ngIf="cargando" class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Cargando documentos...</p>
+    </div>
+
+    <!-- Error message -->
+    <div *ngIf="error && !cargando" class="error-message">
+      <i class="error-icon">⚠️</i>
+      <p>{{ error }}</p>
+      <button (click)="cargarDocumentos()" class="retry-btn">Reintentar</button>
+    </div>
+
+    <!-- No documents message -->
+    <div *ngIf="!cargando && !error && documentos.length === 0" class="no-documents">
+      <i class="no-docs-icon">📄</i>
+      <p>No se encontraron documentos</p>
+      <small *ngIf="busqueda">Intenta con una búsqueda diferente</small>
+    </div>
+
+    <!-- Documents table -->
+    <div *ngIf="!cargando && !error && documentos.length > 0" class="table-container">
+      <table class="documents-table">
+        <thead>
+          <tr>
+            <th>Nombre del Documento</th>
+            <th>Fecha de Creación</th>
+            <th>Tamaño</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let documento of documentos; trackBy: trackByNombre" class="document-row">
+            <td class="document-name">
+              <i class="file-icon">📄</i>
+              <span [title]="documento.nombre">{{ documento.nombre }}</span>
+            </td>
+            <td class="document-date">
+              {{ formatearFecha(documento.fechaCreacion) }}
+            </td>
+            <td class="document-size">
+              {{ formatearTamano(documento.tamano) }}
+            </td>
+            <td class="document-actions">
+              <button
+                type="button"
+                (click)="visualizarDocumento(documento)"
+                class="action-btn view-btn"
+                title="Visualizar documento"
+              >
+                👁️
+              </button>
+              <button
+                type="button"
+                (click)="descargarDocumento(documento)"
+                class="action-btn download-btn"
+                title="Descargar documento"
+              >
+                📥
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <div class="pagination" *ngIf="totalPaginas > 1">
+        <div class="pagination-info">
+          Mostrando {{ (paginaActual - 1) * documentosPorPagina + 1 }} - 
+          {{ getUltimoElemento() }} 
+          de {{ totalDocumentos }} documentos
+        </div>
+        
+        <div class="pagination-controls">
+          <button
+            type="button"
+            (click)="paginaAnterior()"
+            [disabled]="paginaActual === 1"
+            class="page-btn"
+          >
+            ‹ Anterior
+          </button>
+
+          <button
+            type="button"
+            *ngFor="let pagina of paginasVisibles"
+            (click)="irAPagina(pagina)"
+            [class.active]="pagina === paginaActual"
+            class="page-btn page-number"
+          >
+            {{ pagina }}
+          </button>
+
+          <button
+            type="button"
+            (click)="paginaSiguiente()"
+            [disabled]="paginaActual === totalPaginas"
+            class="page-btn"
+          >
+            Siguiente ›
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

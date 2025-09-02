@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import { generarPDFParteAlarmaController, generarPDFParteAlarmaEjemplo, uploadMiddleware} from '../controllers/documentos';
+import { generarPDFParteAlarmaController, generarPDFParteAlarmaEjemplo, uploadMiddleware, listarDocumentos, visualizarDocumento, descargarDocumento} from '../controllers/documentos';
 
 const router = Router();
 
@@ -10,5 +10,14 @@ router.post('/pdf/parte-alarma', uploadMiddleware, generarPDFParteAlarmaControll
 // Generar PDF de ejemplo del Parte de Respuesta de Alarma
 router.get('/pdf/parte-alarma/ejemplo', generarPDFParteAlarmaEjemplo);
 
+// RUTAS PARA GESTIÓN DE DOCUMENTOS DEL USUARIO
+// Listar documentos del usuario autenticado
+router.get('/lista', listarDocumentos);
+
+// Visualizar documento específico
+router.get('/visualizar/:nombreArchivo', visualizarDocumento);
+
+// Descargar documento específico
+router.get('/descargar/:nombreArchivo', descargarDocumento);
 
 export default router;

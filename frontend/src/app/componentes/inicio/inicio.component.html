@@ -38,3 +38,59 @@
     <img src="/assets/svc-logo.jpg" alt="SVC Logo" class="nav-logo">
   </div>
 </nav>
+
+<!-- Contenido principal -->
+<div class="main-content" *ngIf="currentUser$ | async as currentUser">
+  <div class="welcome-section">
+    <h1>Bienvenido{{ currentUser?.nombre ? ', ' + currentUser.nombre : '' }}</h1>
+    <p>Sistema de gestión de documentos y partes de alarma</p>
+  </div>
+
+  <div class="content-grid">
+    <!-- Sección de acciones rápidas -->
+    <div class="quick-actions">
+      <h3>Acciones Rápidas</h3>
+      <div class="action-buttons">
+        <button type="button" (click)="irParteAlarma()" class="action-btn primary">
+          📝 Crear Parte de Alarma
+        </button>
+        <button type="button" class="action-btn secondary">
+          📊 Ver Estadísticas
+        </button>
+      </div>
+    </div>
+
+    <!-- Componente de lista de documentos -->
+    <div class="documents-section">
+      <app-lista-documentos></app-lista-documentos>
+    </div>
+  </div>
+</div>
+
+<!-- Fallback mientras se carga el usuario -->
+<div class="main-content" *ngIf="!(currentUser$ | async)">
+  <div class="welcome-section">
+    <h1>Bienvenido</h1>
+    <p>Sistema de gestión de documentos y partes de alarma</p>
+  </div>
+
+  <div class="content-grid">
+    <!-- Sección de acciones rápidas -->
+    <div class="quick-actions">
+      <h3>Acciones Rápidas</h3>
+      <div class="action-buttons">
+        <button type="button" (click)="irParteAlarma()" class="action-btn primary">
+          📝 Crear Parte de Alarma
+        </button>
+        <button type="button" class="action-btn secondary">
+          📊 Ver Estadísticas
+        </button>
+      </div>
+    </div>
+
+    <!-- Componente de lista de documentos -->
+    <div class="documents-section">
+      <app-lista-documentos></app-lista-documentos>
+    </div>
+  </div>
+</div>

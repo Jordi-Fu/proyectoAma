@@ -2,14 +2,7 @@
     <button (click)="volver()" class="btn-volver">Volver</button>
     
     <!-- Botones de acción -->
-    <div class="acciones-container">
-        <button (click)="generarPDFParteAlarma()" [disabled]="cargando" class="btn-generar">
-            {{ cargando ? 'Generando...' : 'Generar PDF' }}
-        </button>
-        <button (click)="generarPDFParteAlarmaEjemplo()" [disabled]="cargando" class="btn-ejemplo">
-            Generar PDF Ejemplo
-        </button>
-    </div>
+    
     
     <!-- Mensajes -->
     <div *ngIf="mensaje" class="mensaje-exito">{{ mensaje }}</div>
@@ -282,4 +275,13 @@
             <div>RECEPTORA PRIVADA DE SERVICIOS DE SEGURIDAD, S.L.U.</div>
             <div>Nº D.G.P. 3.492</div>
         </div>
+        
+    </div>
+    <div class="acciones-container" style="margin-top: 15px;">
+        <button (click)="generarPDFParteAlarma()" [disabled]="cargando" class="btn-generar">
+            {{ cargando ? 'Generando...' : 'Generar PDF' }}
+        </button>
+        <button (click)="generarPDFParteAlarmaEjemplo()" [disabled]="cargando" class="btn-ejemplo">
+            Generar PDF Ejemplo
+        </button>
     </div>

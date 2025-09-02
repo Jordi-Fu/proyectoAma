@@ -49,7 +49,8 @@ export class AuthService {
           next: (response: any) => {
             this.currentUserSubject.next(response.user);
           },
-          error: () => {
+          error: (error) => {
+            console.log('Token inválido detectado, limpiando localStorage...', error);
             // Token inválido, limpiar almacenamiento
             this.logout();
           }
