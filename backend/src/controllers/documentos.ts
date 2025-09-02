@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
-import { getPDF, DatosPlantilla } from '../models/documentos';
-import { generarPDF as generarPDFNuevo, DatosPDF } from '../models/pdf';
+import { generarPDFParteAlarma, DatosParteAlarma } from '../models/parteAlarma';
 import multer from 'multer';
 
 // Configurar multer para manejar archivos en memoria
@@ -22,146 +21,119 @@ const upload = multer({
 // Middleware para manejar múltiples imágenes
 export const uploadMiddleware = upload.array('imagenes', 10); // Máximo 10 imágenes
 
-// Función para generar PDF (nueva funcionalidad principal)
-export const generarPDF = async (req: Request, res: Response): Promise<void> => {
+// Función para generar PDF del Parte de Respuesta de Alarma
+export const generarPDFParteAlarmaController = async (req: Request, res: Response): Promise<void> => {
     try {
-        console.log('Iniciando generación de documento PDF...');
+        console.log('Iniciando generación de PDF Parte de Alarma...');
         
-        // Obtener datos del body (ahora puede venir como string en FormData)
-        let datos: DatosPDF = {};
-        
-        if (req.body?.datos) {
-            if (typeof req.body.datos === 'string') {
-                datos = JSON.parse(req.body.datos);
-            } else {
-                datos = req.body.datos;
-            }
+        // Obtener datos del body o FormData
+        let datos: DatosParteAlarma;
+        let imagenes: Express.Multer.File[] = [];
+
+        // Verificar si es FormData (con imágenes) o JSON simple
+        if (req.is('multipart/form-data')) {
+            // Si es FormData, los datos están en req.body.datos como string JSON
+            datos = req.body.datos ? JSON.parse(req.body.datos) : req.body;
+            imagenes = req.files as Express.Multer.File[] || [];
+            console.log('Datos recibidos como FormData');
+            console.log('Número de imágenes recibidas:', imagenes.length);
+        } else {
+            // Si es JSON simple
+            datos = req.body;
+            console.log('Datos recibidos como JSON');
         }
         
-        // Obtener archivos de imágenes
-        const imagenes = req.files as Express.Multer.File[];
-        
-        console.log('Datos recibidos:', datos);
-        console.log('Imágenes recibidas:', imagenes?.length || 0);
+        console.log('Datos recibidos para Parte de Alarma:', datos);
 
-        // Validar que se recibieron algunos datos o imágenes
-        if ((!datos || Object.keys(datos).length === 0) && (!imagenes || imagenes.length === 0)) {
+        // Validar que se recibieron algunos datos
+        if (!datos || Object.keys(datos).length === 0) {
             res.status(400).json({ 
-                error: 'No se proporcionaron datos ni imágenes',
-                message: 'Debe enviar al menos un campo de texto o una imagen'
+                error: 'No se proporcionaron datos',
+                message: 'Debe enviar al menos un campo del formulario'
             });
             return;
         }
 
+        // Convertir imágenes a base64 si existen
+        if (imagenes.length > 0) {
+            datos.imagenes = imagenes.map(imagen => {
+                const base64 = imagen.buffer.toString('base64');
+                return `data:${imagen.mimetype};base64,${base64}`;
+            });
+            console.log('Imágenes convertidas a base64:', datos.imagenes.length);
+        }
+
         // Generar el documento PDF
-        const pdfBuffer = await generarPDFNuevo(datos, imagenes);
+        const pdfBuffer = await generarPDFParteAlarma(datos);
 
         // Configurar headers para descargar el documento PDF
         res.set({
             'Content-Type': 'application/pdf',
-            'Content-Disposition': 'attachment; filename="documento_personalizado.pdf"',
+            'Content-Disposition': 'attachment; filename="parte_respuesta_alarma.pdf"',
             'Content-Length': pdfBuffer.length.toString()
         });
 
-        console.log('Enviando documento PDF generado...');
+        console.log('Enviando PDF Parte de Alarma generado...');
         res.send(pdfBuffer);
         
     } catch (error) {
-        console.error('Error en generarPDF:', error);
+        console.error('Error en generarPDFParteAlarmaController:', error);
         res.status(500).json({ 
-            error: 'Error al generar el documento PDF',
+            error: 'Error al generar el PDF del Parte de Alarma',
             message: error instanceof Error ? error.message : 'Error desconocido'
         });
     }
 };
 
-// Función para generar PDF de ejemplo
-export const generarPDFEjemplo = async (req: Request, res: Response): Promise<void> => {
+// Función para generar PDF de ejemplo del Parte de Alarma
+export const generarPDFParteAlarmaEjemplo = async (req: Request, res: Response): Promise<void> => {
     try {
-        console.log('Generando documento PDF de ejemplo...');
+        console.log('Generando PDF de ejemplo del Parte de Alarma...');
         
         // Datos de ejemplo
-        const datosEjemplo = {
-            nombre: 'Juan Carlos',
-            apellidos: 'García Martínez', 
-            email: 'juan.garcia@email.com',
-            telefono: '+34 123 456 789',
-            direccion: 'Calle Principal 123, Madrid, España',
-            empresa: 'TechSolutions S.A.',
-            cargo: 'Desarrollador Full Stack'
+        const datosEjemplo: DatosParteAlarma = {
+            zonas: 'A1, A2, B3',
+            fecha: new Date().toLocaleDateString('es-ES'),
+            cliente: 'EMPRESA EJEMPLO S.L.',
+            abonado: '123456',
+            direccion: 'Calle Principal 123',
+            poblacion: 'Madrid',
+            intrusion: true,
+            horaAviso: '14:30',
+            horaLlegadaInstalacion: '14:45',
+            sirena: true,
+            personalFfcc: false,
+            zona: true,
+            puertasAbiertas: true,
+            verificacionPerimetral: true,
+            seResetea: true,
+            alarmaConfirmada: 'no',
+            horaFin: '15:15',
+            observaciones: 'Falsa alarma causada por fuerte viento que activó sensor de vibración en puerta principal. No se detectaron signos de intrusión.',
+            firmaVigilante: 'Juan Pérez',
+            tip: '001'
         };
 
         // Generar el documento PDF
-        const pdfBuffer = await generarPDFNuevo(datosEjemplo);
+        const pdfBuffer = await generarPDFParteAlarma(datosEjemplo);
 
         // Configurar headers para descargar el documento PDF
         res.set({
             'Content-Type': 'application/pdf',
-            'Content-Disposition': 'attachment; filename="documento_ejemplo.pdf"',
+            'Content-Disposition': 'attachment; filename="parte_alarma_ejemplo.pdf"',
             'Content-Length': pdfBuffer.length.toString()
         });
 
-        console.log('Enviando documento PDF de ejemplo...');
+        console.log('Enviando PDF de ejemplo del Parte de Alarma...');
         res.send(pdfBuffer);
         
     } catch (error) {
-        console.error('Error en generarPDFEjemplo:', error);
+        console.error('Error en generarPDFParteAlarmaEjemplo:', error);
         res.status(500).json({ 
-            error: 'Error al generar el documento PDF de ejemplo',
+            error: 'Error al generar el PDF de ejemplo del Parte de Alarma',
             message: error instanceof Error ? error.message : 'Error desconocido'
         });
     }
 };
 
-// Función para generar Word (funcionalidad legacy mantenida)
-export const generarWord = async (req: Request, res: Response): Promise<void> => {
-    try {
-        console.log('Iniciando generación de documento Word...');
-        
-        // Obtener datos del body (ahora puede venir como string en FormData)
-        let datos: DatosPlantilla = {};
-        
-        if (req.body?.datos) {
-            if (typeof req.body.datos === 'string') {
-                datos = JSON.parse(req.body.datos);
-            } else {
-                datos = req.body.datos;
-            }
-        }
-        
-        // Obtener archivos de imágenes
-        const imagenes = req.files as Express.Multer.File[];
-        
-        console.log('Datos recibidos:', datos);
-        console.log('Imágenes recibidas:', imagenes?.length || 0);
 
-        // Validar que se recibieron algunos datos o imágenes
-        if ((!datos || Object.keys(datos).length === 0) && (!imagenes || imagenes.length === 0)) {
-            res.status(400).json({ 
-                error: 'No se proporcionaron datos ni imágenes',
-                message: 'Debe enviar al menos un campo de texto o una imagen'
-            });
-            return;
-        }
-
-        // Generar el documento Word
-        const documentoBuffer = await getPDF(datos, imagenes);
-
-        // Configurar headers para descargar el documento Word
-        res.set({
-            'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'Content-Disposition': 'attachment; filename="documento_personalizado.docx"',
-            'Content-Length': documentoBuffer.length.toString()
-        });
-
-        console.log('Enviando documento Word generado...');
-        res.send(documentoBuffer);
-        
-    } catch (error) {
-        console.error('Error en generarWord:', error);
-        res.status(500).json({ 
-            error: 'Error al generar el documento Word',
-            message: error instanceof Error ? error.message : 'Error desconocido'
-        });
-    }
-};

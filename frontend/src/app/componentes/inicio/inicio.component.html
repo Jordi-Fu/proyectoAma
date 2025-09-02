@@ -1,0 +1,40 @@
+<nav class="navbar">
+  <div class="navbar-brand">
+    <h2>Generador de partes para acuda</h2>
+  </div>
+
+  <!-- Mobile Menu Button -->
+  <button class="mobile-menu-toggle" aria-label="Toggle menu" (click)="toggleMenu()" [class.active]="isMenuOpen">
+    <span class="hamburger" [class.active]="isMenuOpen"></span>
+    <span class="hamburger" [class.active]="isMenuOpen"></span>
+    <span class="hamburger" [class.active]="isMenuOpen"></span>
+  </button>
+
+  <!-- Navigation Menu -->
+  <div class="navbar-menu" [class.active]="isMenuOpen">
+    <div class="navbar-nav">
+      <a routerLink="/" class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">
+        <span>Inicio</span>
+      </a>
+      <a routerLink="/parteRespuestaAlarma" class="nav-link" routerLinkActive="active" (click)="closeMenu()">
+        <span>Parte alarma</span>
+      </a>
+      <a href="#" class="nav-link" (click)="closeMenu()">
+        <span>Dashboard</span>
+      </a>
+      <a href="#" class="nav-link" (click)="closeMenu()">
+        <span>Proyectos</span>
+      </a>
+      <a href="#" class="nav-link" (click)="closeMenu()">
+        <span>Configuración</span>
+      </a>
+      <a href="#" class="nav-link logout-link" (click)="logout(); closeMenu()">
+        <span>🚪 Cerrar Sesión</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="navbar-logo">
+    <img src="/assets/svc-logo.jpg" alt="SVC Logo" class="nav-logo">
+  </div>
+</nav>

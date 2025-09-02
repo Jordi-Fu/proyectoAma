@@ -8,6 +8,7 @@ import { Server as IOServer } from 'socket.io';
 import db from '../db/connection';
 
 import routerDocumentos from '../routes/documentos';
+import routerAuth from '../routes/auth';
 
 class Server {
   private app: Application;
@@ -49,6 +50,7 @@ class Server {
       res.json({ msg: 'API Working' });
     });
     this.app.use('/api/documentos', routerDocumentos);
+    this.app.use('/api/auth', routerAuth);
 
   }
 

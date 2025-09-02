@@ -1,15 +1,14 @@
 import {Router} from 'express';
-import {generarPDF, generarPDFEjemplo, generarWord, uploadMiddleware} from '../controllers/documentos';
+import { generarPDFParteAlarmaController, generarPDFParteAlarmaEjemplo, uploadMiddleware} from '../controllers/documentos';
 
 const router = Router();
 
-// Generar documento PDF con datos personalizados (incluyendo imágenes) - NUEVA FUNCIONALIDAD PRINCIPAL
-router.post('/pdf', uploadMiddleware, generarPDF);
+// NUEVAS RUTAS PARA PARTE DE RESPUESTA DE ALARMA
+// Generar PDF del Parte de Respuesta de Alarma con datos del formulario (con soporte para imágenes)
+router.post('/pdf/parte-alarma', uploadMiddleware, generarPDFParteAlarmaController);
 
-// Generar documento PDF con datos de ejemplo
-router.get('/pdf/ejemplo', generarPDFEjemplo);
+// Generar PDF de ejemplo del Parte de Respuesta de Alarma
+router.get('/pdf/parte-alarma/ejemplo', generarPDFParteAlarmaEjemplo);
 
-// Generar documento Word (funcionalidad legacy)
-router.post('/word', uploadMiddleware, generarWord);
 
 export default router;

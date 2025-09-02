@@ -20,6 +20,7 @@ const http_1 = __importDefault(require("http"));
 const socket_io_1 = require("socket.io");
 const connection_1 = __importDefault(require("../db/connection"));
 const documentos_1 = __importDefault(require("../routes/documentos"));
+const auth_1 = __importDefault(require("../routes/auth"));
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
@@ -50,6 +51,7 @@ class Server {
             res.json({ msg: 'API Working' });
         });
         this.app.use('/api/documentos', documentos_1.default);
+        this.app.use('/api/auth', auth_1.default);
     }
     dbConnect() {
         return __awaiter(this, void 0, void 0, function* () {

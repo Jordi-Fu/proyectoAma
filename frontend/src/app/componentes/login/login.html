@@ -1,0 +1,77 @@
+<div class="login-container">
+  <div class="login-card">
+    <!-- Logo Section -->
+    <div class="login-header">
+      <img src="/assets/svc-logo.jpg" alt="SVC Logo" class="login-logo">
+      <h2>Iniciar Sesión</h2>
+      <p>Accede al generador de partes para acuda</p>
+    </div>
+
+    <!-- Login Form -->
+    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="nombre">Nombre de usuario</label>
+        <input 
+          type="text" 
+          id="nombre" 
+          formControlName="nombre"
+          class="form-control"
+          [class.error]="loginForm.get('nombre')?.invalid && loginForm.get('nombre')?.touched"
+          placeholder="Ingresa tu nombre de usuario"
+        >
+        <div class="error-message" *ngIf="loginForm.get('nombre')?.invalid && loginForm.get('nombre')?.touched">
+          El nombre de usuario es requerido
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="contraseña">Contraseña</label>
+        <input 
+          [type]="showPassword ? 'text' : 'password'" 
+          id="contraseña" 
+          formControlName="contraseña"
+          class="form-control password-input"
+          [class.error]="loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched"
+          placeholder="Ingresa tu contraseña"
+        >
+        <button 
+          type="button" 
+          class="password-toggle"
+          (click)="togglePassword()"
+          title="Mostrar/Ocultar contraseña"
+        >
+          {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+        </button>
+        <div class="error-message" *ngIf="loginForm.get('contraseña')?.invalid && loginForm.get('contraseña')?.touched">
+          La contraseña es requerida
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button 
+          type="submit" 
+          class="btn-login"
+          [disabled]="loginForm.invalid || isLoading"
+        >
+          <span *ngIf="!isLoading">Iniciar Sesión</span>
+          <span *ngIf="isLoading" class="loading-spinner">Cargando...</span>
+        </button>
+      </div>
+
+      <!-- Error message -->
+      <div class="error-alert" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Success message -->
+      <div class="success-alert" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+    </form>
+
+    <!-- Footer -->
+    <div class="login-footer">
+      <p>¿Olvidaste tu contraseña? <a href="#" class="link">Contacta al administrador</a></p>
+    </div>
+  </div>
+</div>

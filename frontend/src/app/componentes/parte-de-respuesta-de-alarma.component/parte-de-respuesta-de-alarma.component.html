@@ -1,0 +1,285 @@
+<div>
+    <button (click)="volver()" class="btn-volver">Volver</button>
+    
+    <!-- Botones de acción -->
+    <div class="acciones-container">
+        <button (click)="generarPDFParteAlarma()" [disabled]="cargando" class="btn-generar">
+            {{ cargando ? 'Generando...' : 'Generar PDF' }}
+        </button>
+        <button (click)="generarPDFParteAlarmaEjemplo()" [disabled]="cargando" class="btn-ejemplo">
+            Generar PDF Ejemplo
+        </button>
+    </div>
+    
+    <!-- Mensajes -->
+    <div *ngIf="mensaje" class="mensaje-exito">{{ mensaje }}</div>
+    <div *ngIf="error" class="mensaje-error">{{ error }}</div>
+</div>
+
+<div class="form-container">
+        <div class="header">
+            <div class="logo-left">FBS</div>
+            <div class="title">
+                SERVICIO DE ACUDA<br>
+                PARTE DE RESPUESTA DE ALARMA
+            </div>
+            <div class="logo-right">
+                <div class="svc-logo">
+                    <div class="triangle">SVC</div>
+                    <div class="grupo-text">GRUPO SVC</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-field" style="width: 35%;">
+                ZONA(S): <input type="text" [(ngModel)]="datosParteAlarma.zonas">
+            </div>
+            <div class="form-field" style="width: 25%;">
+                FECHA: <input type="date" [(ngModel)]="datosParteAlarma.fecha">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-field" style="width: 35%;">
+                CLIENTE: <input type="text" [(ngModel)]="datosParteAlarma.cliente">
+            </div>
+            <div class="form-field" style="width: 25%;">
+                ABONADO: <input type="text" [(ngModel)]="datosParteAlarma.abonado">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-field" style="width: 50%;">
+                DIRECCIÓN: <input type="text" [(ngModel)]="datosParteAlarma.direccion">
+            </div>
+            <div class="form-field" style="width: 25%;">
+                POBLACIÓN: <input type="text" [(ngModel)]="datosParteAlarma.poblacion">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-field" style="width: 100%;">
+                MOTIVO AVISO: 
+                <span class="checkbox-inline">
+                    <input type="checkbox" id="intrusion" [(ngModel)]="datosParteAlarma.intrusion"> 
+                    <label for="intrusion">INTRUSIÓN</label>
+                </span>
+                <span class="checkbox-inline">
+                    <input type="checkbox" id="incendio" [(ngModel)]="datosParteAlarma.incendio"> 
+                    <label for="incendio">INCENDIO</label>
+                </span>
+                <span class="checkbox-inline">
+                    <input type="checkbox" id="otro" [(ngModel)]="datosParteAlarma.otro"> 
+                    <label for="otro">OTRO:</label>
+                    <input type="text" [(ngModel)]="datosParteAlarma.otroTexto" style="margin-left: 5px; width: 100px;">
+                </span>
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-field" style="width: 35%;">
+                HORA AVISO: <input type="time" [(ngModel)]="datosParteAlarma.horaAviso">
+            </div>
+            <div class="form-field" style="width: 40%;">
+                HORA LLEGADA INSTALACIÓN: <input type="time" [(ngModel)]="datosParteAlarma.horaLlegadaInstalacion">
+            </div>
+        </div>
+
+        <div class="section-title">SITUACIÓN (DETALLAR EN OBSERVACIONES)</div>
+        
+        <div class="checkbox-grid">
+            <div class="checkbox-item">
+                <input type="checkbox" id="sirena" [(ngModel)]="datosParteAlarma.sirena">
+                <label for="sirena">SIRENA</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="personal-ffcc" [(ngModel)]="datosParteAlarma.personalFfcc">
+                <label for="personal-ffcc">SE PERSONAN FF.CC.SS.</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="zona" [(ngModel)]="datosParteAlarma.zona">
+                <label for="zona">ZONA</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="hay-personal" [(ngModel)]="datosParteAlarma.hayPersonal">
+                <label for="hay-personal">HAY PERSONAL DE LA EMPRESA</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="signos" [(ngModel)]="datosParteAlarma.signosViolencia">
+                <label for="signos">SIGNOS VIOLENCIA</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="contratas" [(ngModel)]="datosParteAlarma.contratas">
+                <label for="contratas">HAY CONTRATAS</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="puertas" [(ngModel)]="datosParteAlarma.puertasAbiertas">
+                <label for="puertas">PUERTAS ABIERTAS</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="personas-ajenas" [(ngModel)]="datosParteAlarma.personasAjenas">
+                <label for="personas-ajenas">HAY PERSONAS AJENAS A LA EMPRESA</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="ventanas" [(ngModel)]="datosParteAlarma.ventanasAbiertas">
+                <label for="ventanas">VENTANAS ABIERTAS</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="humo" [(ngModel)]="datosParteAlarma.humoIncendio">
+                <label for="humo">HAY HUMO O INDICIOS DE INCENDIO</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="luces" [(ngModel)]="datosParteAlarma.lucesEncendidas">
+                <label for="luces">LUCES ENCENDIDAS</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="otros-situacion" [(ngModel)]="datosParteAlarma.otrosSituacion">
+                <label for="otros-situacion">OTROS</label>
+            </div>
+        </div>
+
+        <div class="section-title-2">ACTUACIÓN</div>
+        
+        <div class="action-grid">
+            <div class="action-item">
+                <input type="checkbox" id="verificacion" [(ngModel)]="datosParteAlarma.verificacionPerimetral">
+                <label for="verificacion">VERIFICACIÓN PERIMETRAL</label>
+            </div>
+            <div class="action-item">
+                <input type="checkbox" id="teclado" [(ngModel)]="datosParteAlarma.tecladoCentralita">
+                <label for="teclado">TECLADO/CENTRALITA ALARMA:</label>
+            </div>
+            <div class="action-item">
+                <input type="checkbox" id="acceso" [(ngModel)]="datosParteAlarma.accesoRecinto">
+                <label for="acceso">ACCESO AL RECINTO (VALLADO, ZONAS COMUNES)</label>
+            </div>
+            <div class="action-item">
+                <input type="checkbox" id="resetea" [(ngModel)]="datosParteAlarma.seResetea">
+                <label for="resetea">SE RESETEA (RECONECTAR/REARMAR)</label>
+            </div>
+            <div class="action-item">
+                <input type="checkbox" id="persona-empresa" [(ngModel)]="datosParteAlarma.personaEmpresa">
+                <label for="persona-empresa">SE PERSONA PERSONAL DE LA EMPRESA</label>
+            </div>
+            <div class="action-item">
+                <input type="checkbox" id="anulan-zonas" [(ngModel)]="datosParteAlarma.anulanZonas">
+                <label for="anulan-zonas">SE ANULAN ZONAS</label>
+            </div>
+            <div class="action-item">
+                <input type="checkbox" id="llamada" [(ngModel)]="datosParteAlarma.llamadaA">
+                <label for="llamada">SE REALIZA LLAMADA A:</label>
+                <input type="text" [(ngModel)]="datosParteAlarma.llamadaTexto" style="margin-left: 5px; width: 80px;">
+            </div>
+            <div class="action-item">
+                <input type="checkbox" id="silencia" [(ngModel)]="datosParteAlarma.silencia">
+                <label for="silencia">SE SILENCIA</label>
+            </div>
+            <div class="action-item">
+                <input type="checkbox" id="abre-instalacion" [(ngModel)]="datosParteAlarma.abreInstalacion">
+                <label for="abre-instalacion">SE ABRE INSTALACIÓN A:</label>
+                <input type="text" [(ngModel)]="datosParteAlarma.abreTexto" style="margin-left: 5px; width: 80px;">
+            </div>
+            <div class="action-item">
+                <input type="checkbox" id="desconecta" [(ngModel)]="datosParteAlarma.desconectaAlarma">
+                <label for="desconecta">SE DESCONECTA ALARMA</label>
+            </div>
+            <div class="action-item">
+                <input type="checkbox" id="cierra-instalacion" [(ngModel)]="datosParteAlarma.cierraInstalacion">
+                <label for="cierra-instalacion">SE CIERRA INSTALACIÓN</label>
+            </div>
+            <div class="action-item">
+                <input type="checkbox" id="conecta" [(ngModel)]="datosParteAlarma.conectaAlarma">
+                <label for="conecta">SE CONECTA ALARMA</label>
+            </div>
+            <div class="action-item">
+                <input type="checkbox" id="persona-identificada" [(ngModel)]="datosParteAlarma.personaIdentificada">
+                <label for="persona-identificada">PERSONA IDENTIFICADA</label>
+            </div>
+            <div class="action-item">
+                <input type="checkbox" id="otras-actuacion" [(ngModel)]="datosParteAlarma.otrasActuacion">
+                <label for="otras-actuacion">OTRAS:</label>
+                <input type="text" [(ngModel)]="datosParteAlarma.otrasTexto" style="margin-left: 5px; width: 80px;">
+            </div>
+            <div class="action-item">
+                <input type="checkbox" id="nie-dni" [(ngModel)]="datosParteAlarma.nieDniPersona">
+                <label for="nie-dni">NIE/DNI PERSONA ID.</label>
+                <input type="text" [(ngModel)]="datosParteAlarma.nieDniTexto" style="margin-left: 5px; width: 80px;">
+            </div>
+            <div class="action-item">
+                <input type="checkbox" id="fotos" [(ngModel)]="datosParteAlarma.pruebasGraficas">
+                <label for="fotos">PRUEBAS GRÁFICAS (FOTOS)</label>
+            </div>
+        </div>
+
+        <div class="final-section">
+            <div>
+                <strong>ALARMA CONFIRMADA:</strong>
+                <input type="radio" id="si" name="alarmaConfirmada" value="si" [(ngModel)]="datosParteAlarma.alarmaConfirmada" style="margin-left: 10px;"> 
+                <label for="si">SI</label>
+                <input type="radio" id="no" name="alarmaConfirmada" value="no" [(ngModel)]="datosParteAlarma.alarmaConfirmada" style="margin-left: 15px;"> 
+                <label for="no">NO</label>
+            </div>
+            <div>
+                <strong>HORA FIN:</strong>
+                <input type="time" [(ngModel)]="datosParteAlarma.horaFin">
+            </div>
+        </div>
+
+        <div class="observations-section">
+            <strong>OBSERVACIONES:</strong>
+            <div class="observations">
+                <textarea [(ngModel)]="datosParteAlarma.observaciones" placeholder="Escriba aquí sus observaciones..."></textarea>
+                
+                <!-- Botón para añadir imágenes -->
+                <div class="image-upload-section">
+                    <input 
+                        type="file" 
+                        #imagenesAlarmaInput
+                        multiple 
+                        accept="image/*" 
+                        (change)="onImagenesAlarmaSeleccionadas($event)"
+                        style="display: none;"
+                    >
+                    <button 
+                        type="button" 
+                        (click)="imagenesAlarmaInput.click()" 
+                        class="btn-add-images"
+                    >
+                        📷 Añadir Imágenes
+                    </button>
+                </div>
+                
+                <!-- Preview de imágenes -->
+                <div class="images-preview" *ngIf="datosParteAlarma.imagenes && datosParteAlarma.imagenes.length > 0">
+                    <div class="image-item" *ngFor="let imagen of datosParteAlarma.imagenes; let i = index; trackBy: trackByIndex">
+                        <img 
+                            [src]="getImagePreview(imagen)" 
+                            [alt]="imagen.name" 
+                            class="preview-image"
+                            (error)="onImageError($event)"
+                            loading="lazy"
+                        >
+                        <button type="button" (click)="eliminarImagenAlarma(i)" class="btn-remove-image" title="Eliminar imagen">✕</button>
+                        <span class="image-name">{{ imagen.name }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="signature-section">
+            <div class="signature-box">
+                FIRMA VIGILANTE
+                <input type="text" class="signature-input" [(ngModel)]="datosParteAlarma.firmaVigilante">
+            </div>
+            <div class="signature-box">
+                TIP
+                <input type="text" class="signature-input" [(ngModel)]="datosParteAlarma.tip">
+            </div>
+        </div>
+
+        <div class="footer">
+            <div>RECEPTORA PRIVADA DE SERVICIOS DE SEGURIDAD, S.L.U.</div>
+            <div>Nº D.G.P. 3.492</div>
+        </div>
+    </div>
